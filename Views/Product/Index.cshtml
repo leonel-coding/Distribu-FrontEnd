@@ -1,0 +1,60 @@
+﻿@model List<ProductDto>
+@{
+    Layout = "_Layout";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Listado de productos</h3>
+
+        <div class="card-tools">
+            <div class="input-group input-group-sm">
+                <select class="custom-select" id="typeProductoSelect" style="margin-right: 10px; margin-top: 5px">
+                    <option value="0">Todos</option>
+                    @if (ViewBag.TypeProduct != null && ViewBag.TypeProduct.Count > 0)
+                    {
+                        @foreach (var tipoProducto in ViewBag.TypeProduct)
+                        {
+                            <option value="@tipoProducto.TypeProductId">@tipoProducto.TypeProductDesc</option>
+                        }
+                    }
+                </select>
+
+                <a class="btn btn-warning float-right" style="margin-right: 5px;" onclick="UpdateProduct()">
+                    <i class="fas fa-refresh"></i> Actualizar
+                </a>
+                <a type="button" class="btn btn-primary float-right" style="margin-right: 5px;" href="/Product/Product">
+                    <i class="fas fa-plus"></i> Agregar nuevo producto
+                </a>
+            </div>
+        </div>
+        <!-- /.card-tools -->
+    </div>
+
+    <div class="card-body" id="table-productsenabled">
+        @await Html.PartialAsync("_Products", Model)
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<script>
+    function UpdateProduct() {
+        var selectedTypeProductId = $('#typeProductoSelect').val();
+        GetProductsByTypeProduct(selectedTypeProductId);
+    }
+
+    function GetProductsByTypeProduct(typeProductId) {
+        $.ajax({
+            url: '@Url.Action("GetProductsByTypeProdId", "Product")' + '?typeProductId=' + typeProductId,
+            type: 'GET',
+            success: function (result) {
+                $('#table-productsenabled').html(result);
+
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

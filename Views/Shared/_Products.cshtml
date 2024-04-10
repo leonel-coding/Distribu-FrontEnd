@@ -1,0 +1,66 @@
+﻿@using DTOLibrary.Dtos;
+@model IEnumerable<ProductDto>
+
+<table id="example1" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width: 50px;">Editar</th>
+            <th>Nombre de Producto</th>
+            <th>Clave</th>
+            <th>Precio</th>
+            <th style="width: 50px;">Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model != null)
+        {
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Product" asp-controller="Product" asp-route-productId="@product.ProductId" class="btn btn-info btn-sm edit-button btn-block">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    </td>
+                    <td>@product.ProductName</td>
+                    <td>@product.ProductCode</td>
+                    <td style="text-align:right">@product.UnitPrice</td>
+                    <td>
+                        <a class="btn btn-danger btn-sm delete-button btn-block" data-product-id="@product.ProductId" onclick="confirmDelete(@product.ProductId)">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Editar</th>
+            <th>Nombre de Producto</th>
+            <th>Clave</th>
+            <th>Precio</th>
+            <th>Eliminar</th>
+        </tr>
+    </tfoot>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    function confirmDelete(productId) {
+        if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+            window.location.href = '/Product/DeleteProduct?productId=' + productId;
+        }
+    }
+
+    $(function () {
+
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+ 
+</script>

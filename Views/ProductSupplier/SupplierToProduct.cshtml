@@ -1,0 +1,50 @@
+﻿@model ProductSupplierDto
+@{
+    Layout = null;
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">@ViewBag.TittleSupplierToProduct</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form asp-action="AddSupplier" asp-controller="ProductSupplier" method="post">
+        <input type="hidden" asp-for="ProductId" />
+        <input type="hidden" asp-for="ProductSupplierId" />
+        <div class="card-body">
+            <div class="form-group">
+                <label>Seleccionar proveedor</label>
+                <div class="input-group">
+                    <select class="custom-select" id="tipoProductoSelect" asp-for="SupplierId">
+                        @if (ViewBag.Suppliers != null && ViewBag.Suppliers.Count > 0)
+                        {
+                            foreach (var supplier in ViewBag.Suppliers)
+                            {
+                                <option value="@supplier.SupplierId">@supplier.SupplierName</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No hay proveedores disponibles</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Clave de producto</label>
+                <input type="text" id="ProductSupplierCode" name="ProductSupplierCode" class="form-control" placeholder="Enter ..." required asp-for="ProductSupplierCode">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Precio al proveedor</label>
+                <input type="text" id="ProductSupplierUnitPrice" name="ProductSupplierUnitPrice" class="form-control" placeholder="Enter ..." required asp-for="ProductSupplierUnitPrice">
+            </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer right-content-between">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
+<!-- /.card -->

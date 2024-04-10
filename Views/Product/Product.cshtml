@@ -1,0 +1,89 @@
+﻿@using DTOLibrary.ViewModels;
+@model ProductViewModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="col-md-9 mx-auto">
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title">@ViewBag.ProductResult</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <form asp-action="ProductEditCreate" asp-controller="Product" method="post">
+                <input type="hidden" asp-for="ProductId" />
+                <input type="hidden" asp-for="IsActive" />
+                <div class="modal-footer right-content-between">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a class="btn btn-default" asp-action="Index" asp-controller="Product">Cancelar</a>
+                </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Código</label>
+                                <input type="text" id="productCode" name="productCode" class="form-control" placeholder="Enter ..." required asp-for="ProductCode">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter ..." required asp-for="ProductName">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <!-- select -->
+                            <div class="form-group">
+                                <label>Tipo de Producto</label>
+                                <div class="input-group">
+                                    <select class="custom-select" id="tipoProductoSelect" asp-for="TypeProductId">
+                                        @foreach (var tipoProducto in ViewBag.TypesProduct)
+                                        {
+                                            <option value="@tipoProducto.TypeProductId">@tipoProducto.TypeProductDesc</option>
+                                        }
+                                    </select>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Agregar otro tipo</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Costo</label>
+                                <input type="text" class="form-control" placeholder="Enter ..." asp-for="UnitPrice">
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        @if(Model.ProductId != 0)
+        {
+            <div class="card-body" id="table-suppliersproduct">
+                @await Html.PartialAsync("_SuppliersByProduct", Model)
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function GetSuppliersByProductView(productId) {
+        $.ajax({
+            url: '@Url.Action("GetSuppliersByProductView", "Product")' + '?productId=' + productId,
+            type: 'GET',
+            success: function (result) {
+                $('#table-suppliersproduct').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+</script>
